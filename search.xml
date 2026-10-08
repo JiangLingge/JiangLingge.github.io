@@ -1,6 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title>Hello World</title>
+    <url>/2026/10/08/hello-world/</url>
+    <content><![CDATA[<p>Hello World.</p>
+<p>学一门新语言、开一个新项目，第一件事总是先让它向世界问个好。新博客也一样，就从这个标题开始。</p>
+<span id="more"></span>
+
+<p>这里是我的个人博客，准备用来放技术笔记和平时的一些零散想法。</p>
+<p>之所以想有个自己的地方：写下来的东西，才算真正想清楚过。放在自己的站点上，排版是自己的，数据也是自己的。</p>
+<p>暂时没什么宏大的计划，就是慢慢写、一直写。</p>
+<p>那么，从这一篇开始。</p>
+]]></content>
+      <categories>
+        <category>生活</category>
+      </categories>
+      <tags>
+        <tag>随笔</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>CVE-2024-7436 D-Link DI-8100 命令执行漏洞分析</title>
     <url>/2026/10/08/cve-2024-7436-dlink-di-8100/</url>
     <content><![CDATA[<h1 id="漏洞分析"><a href="#漏洞分析" class="headerlink" title="漏洞分析"></a>漏洞分析</h1><p>下载固件后使用binwalk解包</p>
@@ -53,25 +72,6 @@
         <tag>漏洞分析</tag>
         <tag>IoT</tag>
         <tag>CVE</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>Hello World</title>
-    <url>/2026/10/08/hello-world/</url>
-    <content><![CDATA[<p>Hello World.</p>
-<p>学一门新语言、开一个新项目，第一件事总是先让它向世界问个好。新博客也一样，就从这个标题开始。</p>
-<span id="more"></span>
-
-<p>这里是我的个人博客，准备用来放技术笔记和平时的一些零散想法。</p>
-<p>之所以想有个自己的地方：写下来的东西，才算真正想清楚过。放在自己的站点上，排版是自己的，数据也是自己的。</p>
-<p>暂时没什么宏大的计划，就是慢慢写、一直写。</p>
-<p>那么，从这一篇开始。</p>
-]]></content>
-      <categories>
-        <category>生活</category>
-      </categories>
-      <tags>
-        <tag>随笔</tag>
       </tags>
   </entry>
 </search>
