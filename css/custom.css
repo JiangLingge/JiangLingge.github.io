@@ -1,0 +1,158 @@
+/* ==========================================================================
+   自定义样式 —— 浅色极简风
+   在 _config.butterfly.yml 的 inject.head 里已引入本文件
+   改完后 hexo cl && hexo s 即可看到效果
+   ========================================================================== */
+
+/* ------------------------------ 全局配色变量 ------------------------------ */
+:root {
+  --my-accent: #4c6fff;
+  --my-accent-2: #2bb3a3;
+  --my-radius: 12px;
+  --my-shadow: 0 4px 20px rgba(76, 111, 255, 0.08);
+  --my-border: rgba(76, 111, 255, 0.12);
+}
+
+/* ------------------------------ 中文字体优化 ------------------------------ */
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC',
+    'Hiragino Sans GB', 'Microsoft YaHei', 'Source Han Sans SC', 'Noto Sans CJK SC',
+    Roboto, Helvetica, Arial, sans-serif;
+  letter-spacing: 0.01em;
+}
+
+/* 代码块等宽字体 */
+code,
+pre,
+kbd {
+  font-family: 'JetBrains Mono', 'Cascadia Code', Consolas, Menlo, Monaco,
+    'Courier New', monospace !important;
+}
+
+/* ------------------------------ 圆角与阴影统一 ---------------------------- */
+#recent-posts > .recent-post-item,
+#aside-content .card-widget,
+#page,
+#archive,
+#post,
+.layout > div:first-child:not(.recent-posts) {
+  border-radius: var(--my-radius) !important;
+}
+
+#recent-posts > .recent-post-item {
+  box-shadow: var(--my-shadow);
+  border: 1px solid var(--my-border);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+#recent-posts > .recent-post-item:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 10px 32px rgba(76, 111, 255, 0.16);
+}
+
+#aside-content .card-widget {
+  box-shadow: var(--my-shadow);
+  border: 1px solid var(--my-border);
+}
+
+/* ------------------------------ 链接与强调色 ------------------------------ */
+a {
+  transition: color 0.2s ease;
+}
+
+#article-container a:not(.headerlink):not(.fancybox) {
+  color: var(--my-accent);
+  text-decoration: none;
+  border-bottom: 1px dashed rgba(76, 111, 255, 0.45);
+}
+
+#article-container a:not(.headerlink):not(.fancybox):hover {
+  color: var(--my-accent-2);
+  border-bottom-color: var(--my-accent-2);
+}
+
+/* ------------------------------ 文章正文排版 ------------------------------ */
+#article-container {
+  font-size: 16px;
+  line-height: 1.9;
+}
+
+#article-container h2 {
+  margin-top: 2.2em;
+  padding-left: 12px;
+  border-left: 4px solid var(--my-accent);
+  border-bottom: none;
+}
+
+#article-container h3 {
+  margin-top: 1.8em;
+}
+
+/* 引用块 */
+#article-container blockquote {
+  border-left: 4px solid var(--my-accent);
+  background: rgba(76, 111, 255, 0.05);
+  border-radius: 0 8px 8px 0;
+  color: #4b5563;
+}
+
+/* 表格 */
+#article-container table {
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.04);
+}
+
+#article-container table thead th {
+  background: rgba(76, 111, 255, 0.08) !important;
+  color: #1f2937 !important;
+}
+
+/* 行内代码 */
+#article-container code:not([class*='language-']) {
+  background: rgba(76, 111, 255, 0.1);
+  color: #3b5bdb;
+  border-radius: 5px;
+  padding: 2px 6px;
+  margin: 0 2px;
+}
+
+/* ------------------------------ 顶部导航栏 -------------------------------- */
+#nav {
+  backdrop-filter: saturate(180%) blur(12px);
+}
+
+#nav .site-page:hover {
+  color: #fff;
+  text-shadow: 0 0 8px rgba(255, 255, 255, 0.6);
+}
+
+/* ------------------------------ 滚动条 ------------------------------------ */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(76, 111, 255, 0.28);
+  border-radius: 8px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(76, 111, 255, 0.5);
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+/* ------------------------------ 暗色模式微调 ------------------------------ */
+[data-theme='dark'] {
+  --my-shadow: 0 4px 20px rgba(0, 0, 0, 0.35);
+  --my-border: rgba(255, 255, 255, 0.08);
+}
+
+[data-theme='dark'] #article-container code:not([class*='language-']) {
+  background: rgba(108, 140, 255, 0.18);
+  color: #a5b4fc;
+}
