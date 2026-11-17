@@ -9,15 +9,17 @@
   <link rel="stylesheet" href="/css/layout.css" />
   <link rel="stylesheet" href="/css/iconfont.css" />
   <link rel="stylesheet" href="/css/nprogress.css" />
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/aplayer@1.10.1/dist/APlayer.min.css" />
-  <link rel="shortcut icon" href="/imgs/shortcut-icon.ico" type="image/x-icon">
+  <link rel="stylesheet" href="/css/APlayer.min.css" />
+  <link rel="shortcut icon" href="/img/favicon.ico" type="image/x-icon">
+  <link rel="icon" type="image/png" sizes="32x32" href="/img/favicon-32.png">
+  <link rel="apple-touch-icon" href="/img/favicon-192.png">
   
   <script src="/js/nprogress.js"></script>
 
 
-  <script src="https://cdn.jsdelivr.net/npm/aplayer@1.10.1/dist/APlayer.min.js"></script>
-  <script src="https://cdn.bootcss.com/jquery/3.4.1/jquery.min.js"></script>
-  <script src="https://cdn.bootcss.com/jquery.pjax/2.0.1/jquery.pjax.min.js"></script>
+  <script src="/js/APlayer.min.js"></script>
+  <script src="/js/jquery.min.js"></script>
+  <script src="/js/jquery.pjax.js"></script>
   <script>
     document.title = `我的博客 | 小站首页`
   </script>
@@ -76,7 +78,7 @@
   const ipt = document.querySelector('#search-input')
   const btn = document.querySelector('#search-btn')
   const layer = document.querySelector('#search-layer')
-  const posts = JSON.parse(`[{"title":"CVE-2024-7436 D-Link DI-8100 命令执行漏洞分析","cover":"/img/cover-2.svg","path":"2026/10/08/cve-2024-7436-dlink-di-8100/"},{"title":"来一个简单ret2text","cover":"/img/cover-3.svg","path":"2026/10/24/simple-ret2text/"},{"title":"CVE-2025-14659 D-Link DIR-860LB1 v203b03 命令注入漏洞","cover":"/img/cover-2.svg","path":"2026/10/24/cve-2025-14659-dlink-dir-860l-b1/"},{"title":"Hello World","cover":"/img/cover-1.svg","path":"2026/10/08/hello-world/"}]`)
+  const posts = JSON.parse(`[{"title":"CVE-2025-14659 D-Link DIR-860LB1 v203b03 命令注入漏洞","cover":"/img/cover-2.svg","path":"2026/10/24/cve-2025-14659-dlink-dir-860l-b1/"},{"title":"来一个简单ret2text","cover":"/img/cover-3.svg","path":"2026/10/24/simple-ret2text/"},{"title":"CVE-2024-7436 D-Link DI-8100 命令执行漏洞分析","cover":"/img/cover-2.svg","path":"2026/10/08/cve-2024-7436-dlink-di-8100/"},{"title":"Hello World","cover":"/img/cover-1.svg","path":"2026/10/08/hello-world/"}]`)
   ipt.addEventListener('keyup', e => {
     if (e.key === 'Enter') {
       handleSearch()
@@ -305,7 +307,7 @@
 </div>
 
 <script>
-  const musics = JSON.parse(`[{"name":"卡布达","artist":"暂无","url":"/music/kabuda.mp3","cover":"/imgs/avatar.jpg"}]`)
+  const musics = JSON.parse(`[{"name":"把世界拼好给你","artist":"讲解石","url":"/music/huiyi.mp3","cover":"/img/music-cover.jpg"}]`)
   const ap = new APlayer({
     container: document.querySelector('#aplayer'),
     audio: musics,
